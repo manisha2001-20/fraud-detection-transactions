@@ -6,9 +6,19 @@ End-to-end fraud analytics on transaction data: validation and preprocessing, le
 
 ![Model evaluation](docs/screenshots/models.png)
 
+## Pipeline (3 stages)
+
+| Stage | What happens | Code |
+|---|---|---|
+| 1. Data preparation and profiling | Schema validation, cleaning, column profile, leakage-free feature engineering | `data_loader.py`, `eda.profile`, `preprocessing.py` |
+| 2. Analysis and rule-based screening | EDA of fraud patterns; 5 transparent rules flag suspicious transactions | `eda.py`, `rules.py` |
+| 3. Machine-learning detection | Supervised classifiers (LR, RF, GB) plus unsupervised anomaly detection (Isolation Forest), evaluated on a time-based split | `models.py`, `evaluation.py` |
+
+The two analytical techniques are **data analysis** (stages 1–2) and **machine learning** (stage 3).
+
 ## Features
 
-- **Data analysis and preprocessing:** schema validation, type coercion, invalid-row handling, missing-value imputation.
+- **Data analysis and preprocessing:** schema validation, type coercion, invalid-row handling, missing-value imputation, and a column-level data profile (type, missing values, distinct values, ranges).
 - **Feature engineering without look-ahead:** each customer-history feature uses only *earlier* transactions. Features include amount ÷ past average, z-score, 1-hour and 24-hour velocity, minutes since the previous transaction, night/weekend/foreign flags and distance from home.
 - **Exploratory data analysis:** fraud rate by category, channel and country; hourly profiles; amount distributions; correlation matrix.
 - **Suspicious-transaction screening:** 5 transparent rules with per-rule precision and coverage, plus an adjustable "rules triggered" filter.
@@ -83,7 +93,7 @@ To open a specific page directly, add `?page=0` through `?page=4` to the URL.
 pytest
 ```
 
-23 tests cover data validation errors, the no-look-ahead feature checks, chronological splitting, rule logic, metrics on hand-computed examples, training, save/load/scoring, EDA helpers, and headless rendering of every dashboard page with Streamlit `AppTest`.
+24 tests cover data validation errors, the no-look-ahead feature checks, chronological splitting, rule logic, data profiling, metrics on hand-computed examples, training, save/load/scoring, EDA helpers, and headless rendering of every dashboard page with Streamlit `AppTest`.
 
 ## Screenshots
 

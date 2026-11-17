@@ -148,3 +148,14 @@ def test_eda_helpers(data):
     assert by_cat["transactions"].sum() == len(data)
     assert eda.hourly_profile(data)["count"].sum() == len(data)
     assert eda.daily_series(data)["frauds"].sum() == data["is_fraud"].sum()
+
+
+def test_profile(data):
+    prof = eda.profile(data).set_index("column")
+    assert set(data.columns) == set(prof.index)
+    assert prof.loc["amount", "missing"] == 0 and prof.loc["amount", "min"] >= 0
+    assert prof.loc["is_fraud", "unique"] == 2
+    assert prof.loc["merchant_category", "top_value"] in set(data["merchant_category"])
+    d = data.head(10).copy()
+    d.loc[d.index[0], "distance_from_home_km"] = None
+    assert eda.profile(d).set_index("column").loc["distance_from_home_km", "missing"] == 1

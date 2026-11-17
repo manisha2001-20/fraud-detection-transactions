@@ -147,7 +147,8 @@ elif page == "Exploratory analysis":
                                             title="Feature correlation matrix"), 520), use_container_width=True)
     with t3:
         st.write("Rows:", len(data), "· Missing values after validation:", ov["missing_values"])
-        st.dataframe(data.describe(include="all").T, use_container_width=True)
+        st.markdown("**Column profile**")
+        st.dataframe(eda.profile(data).astype(str), use_container_width=True, hide_index=True)
         st.dataframe(data.head(50), use_container_width=True, hide_index=True)
 
 elif page == "Suspicious transactions":
