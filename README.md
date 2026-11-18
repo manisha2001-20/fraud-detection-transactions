@@ -6,6 +6,15 @@ End-to-end fraud analytics on transaction data: validation and preprocessing, le
 
 ![Model evaluation](docs/screenshots/models.png)
 
+## Problem statement & objectives
+
+Fraudulent transactions are rare (about 2% here) and hidden among normal ones, so accuracy alone is misleading and
+features must not leak future information. This project aims to:
+1. validate and profile transaction data and engineer customer-history features without look-ahead;
+2. explain fraud patterns through exploratory analysis and transparent rules;
+3. compare supervised classifiers and an unsupervised anomaly detector with imbalance-aware metrics (PR-AUC) on a time-based split;
+4. present everything in an interactive dashboard that can score new transactions.
+
 ## Pipeline (3 stages)
 
 | Stage | What happens | Code |
@@ -46,6 +55,13 @@ To use your own data, upload a CSV in the sidebar or set `FRAUD_DATA_PATH`. Requ
 | Isolation Forest (unsupervised) | 0.321 | 0.875 | 0.321 | 0.398 | 0.355 |
 
 > These numbers describe **synthetic** data and say nothing about performance on real bank data. A random classifier would score PR-AUC ≈ 0.017 here. Thresholds are tuned on a validation slice of the training period, never on the test set. The dashboard recomputes everything live.
+
+## Limitations
+
+- All results are on **synthetic** data (`data_generator.py`); they say nothing about performance on real bank data.
+- The 5 screening rules use fixed, hand-chosen conditions.
+- The trained model (`models/fraud_model.joblib`) is not committed; `python scripts/train.py` regenerates it.
+- The dashboard runs locally with Streamlit; it is not deployed as a service.
 
 ## Project structure
 
